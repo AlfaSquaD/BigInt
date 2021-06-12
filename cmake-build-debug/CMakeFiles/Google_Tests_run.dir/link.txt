@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/Google_Tests_run.dir/test/bigintTest.c.o  -o Google_Tests_run  -lgtest -lgtest_main 

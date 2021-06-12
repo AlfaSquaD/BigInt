@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/BigInt.dir/src/bigint.c.o CMakeFiles/BigInt.dir/main.c.o  -o BigInt 
