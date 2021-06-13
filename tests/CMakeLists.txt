@@ -1,8 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
-project(BigInt C)
-
-set(CMAKE_C_STANDARD 99)
-
 enable_testing()
 
 add_executable(test1 createreadtest.c ${src})
@@ -28,3 +23,22 @@ add_test(CompareTest4 test7)
 
 add_executable(test8 createzero.c ${src})
 add_test(CreateZeroTest test8)
+
+add_executable(test9 addStringTest1.c ${src})
+add_test(AddString1 test9)
+
+add_executable(test12 addStringTest2.c ${src})
+add_test(AddString2 test12)
+
+add_executable(test13 addStringTest3.c ${src})
+add_test(AddString3 test13)
+
+add_executable(test14 addStringTest4.c ${src})
+add_test(AddString4 test14)
+
+add_executable(test10 wrongAddStringTest1.c ${src})
+add_test(WrongAdd test10)
+
+add_executable(test11 wrongAddStringTest2.c ${src})
+add_test(WrongAdd2 test11)
+

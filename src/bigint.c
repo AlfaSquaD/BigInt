@@ -57,6 +57,64 @@ int compare(BigInt* num1, BigInt* num2){
     }
 }
 
+bool bigint_add(char* out, char* num1, char* num2){
+    char* tmp = calloc(1 ,DIGITS);
+    char *shortNum, *longNum;
+    unsigned long len1 = strlen(num1);
+    unsigned long len2 = strlen(num2);
+    unsigned long shortest;
+    int diff;
+    int carry = 0;
+    int sum;
+    if(len1 > DIGITS || len2 > DIGITS){
+        fprintf(stdout, "Number larger than %d Digits!\nOperation stopped!\n", DIGITS);
+        return false;
+    }
+    if(len1 <= len2){
+        shortest = len1;
+        diff = (int)(len2 - len1);
+        shortNum = num1;
+        longNum = num2;
+    }
+    else{
+        shortest = len2;
+        diff = (int)(len1 - len2);
+        shortNum = num2;
+        longNum = num1;
+    }
+    for (int i = (int)shortest - 1; i >= 0; i--){
+        sum = ((shortNum[i] - '0') + (longNum[i + diff] - '0')) + carry;
+        if(sum > 9){
+            tmp[i + diff] = (char)('0' + (sum % 10));
+            carry = 1;
+        } else{
+            tmp[i+diff] = (char)(sum + '0');
+            carry = 0;
+        }
+    }
+    for(int i = diff - 1; i >= 0; i--){
+        sum = (longNum[i] - '0') + carry;
+        if(sum > 9){
+            tmp[i] = (char)('0' + (sum % 10));
+            carry = 1;
+        } else{
+            tmp[i] = (char)(sum + '0');
+            carry = 0;
+        }
+    }
+    if(carry == 1){
+        if (strlen(tmp) == DIGITS) {
+            fprintf(stdout, "Number larger than %d Digits!\nOperation stopped!\n", DIGITS);
+            return false;
+        }
+        for (int i = (int) strlen(tmp) - 1; i >= 0; i--) tmp[i + 1] = tmp[i];
+        tmp[0] = '1';
+    }
+    strcpy(out, tmp);
+    free(tmp);
+    return true;
+}
+
 void printBigInt(BigInt* number){
     if(number->isNegative) printf("-%s", number->number);
     else printf("%s", number->number);

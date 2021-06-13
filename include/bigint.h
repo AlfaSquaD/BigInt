@@ -15,9 +15,9 @@ typedef struct bigintStruct{
     char* number;
 }BigInt;
 
-void bigint_add(unsigned char* dest, const unsigned char* num);
+bool bigint_add(char* out, char* num1, char* num2);
 
-void bigint_sub(unsigned char* dest, const unsigned char* num);
+bool bigint_sub(char* out, char* num1, char* num2);
 
 bool addBigInt(BigInt* dest, BigInt* number);
 
