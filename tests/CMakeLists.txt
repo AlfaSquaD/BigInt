@@ -42,3 +42,6 @@ add_test(WrongAdd test10)
 add_executable(test11 wrongAddStringTest2.c ${src})
 add_test(WrongAdd2 test11)
 
+add_executable(test15 subStringTest1.c ${src})
+add_test(SubString1 test15)
+
