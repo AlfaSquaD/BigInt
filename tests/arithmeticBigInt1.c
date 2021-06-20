@@ -4,10 +4,10 @@
 #include "bigint.h"
 
 int main(){
-    char *assert = "64856458016977";
+    char *assert = "64856453452577";
     char *str1 = "64856453452123";
     BigInt *bigInt1 = strtobigInt(str1);
-    char *str2 = "4564854";
+    char *str2 = "454";
     BigInt *bigInt2 = strtobigInt(str2);
     addBigInt(bigInt1, bigInt2);
     char *out = calloc(sizeof (char), strlen(assert) + 1);

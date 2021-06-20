@@ -32,6 +32,8 @@ void tidyBigInt(BigInt* number);
 
 int compare(BigInt* num1, BigInt* num2);
 
+int compareAbsVal(BigInt* num1, BigInt* num2);
+
 int _compareNode(BigIntNode *node1, BigIntNode *node2);
 
 BigInt *copyBigInt(BigInt *number);

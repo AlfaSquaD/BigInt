@@ -72,11 +72,24 @@ void addBigInt(BigInt* dest, BigInt* number){
     tidyBigInt(dest);
 }
 
+// TODO: Rewrite
 void subBigInt(BigInt* dest, BigInt* number){
     if((dest->isNegative + number->isNegative) % 2 == 0){
         return addBigInt(dest, number);
     }
-    BigIntNode *destNode = dest->root, *otherNode = number->root;
+    BigInt *tdest, *tnumber;
+    bool swap;
+    if(compareAbsVal(dest, number) == -1){
+        tdest = copyBigInt(number);
+        tdest->isNegative = !dest;
+        tnumber = dest;
+        swap = true;
+    } else{
+        tdest = dest;
+        tnumber = number;
+        swap = false;
+    }
+    BigIntNode *destNode = tdest->root, *otherNode = tnumber->root;
     while (otherNode){
         destNode->number -= otherNode->number;
         if(destNode->number < 0){
@@ -99,7 +112,15 @@ void subBigInt(BigInt* dest, BigInt* number){
         dest->isNegative = !dest->isNegative;
         destNode->number = destNode->number * -1;
     }
-    tidyBigInt(dest);
+    tidyBigInt(tdest);
+    if(swap){
+        freeBigInt(dest);
+        dest = malloc(sizeof (BigInt));
+        dest->isNegative = tdest->isNegative;
+        dest->size = tdest->size;
+        dest->root = tdest->root;
+        free(tdest);
+    }
 }
 
 void printBigInt(BigInt* number){
@@ -187,6 +208,12 @@ int compare(BigInt* num1, BigInt* num2){
         else if(num1->size < num2->size) return -1;
         else return _compareNode(num1->root, num2->root);
     }
+}
+
+int compareAbsVal(BigInt* num1, BigInt* num2){
+    if(num1->size > num2->size) return 1;
+    else if(num1->size < num2->size) return -1;
+    else return _compareNode(num1->root, num2->root);
 }
 
 int _compareNode(BigIntNode *node1, BigIntNode *node2){
