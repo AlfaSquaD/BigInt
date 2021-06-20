@@ -29,3 +29,18 @@ add_test(ArithmeticBigInt5 5a)
 
 add_executable(6a arithmeticBigInt6.c ${src})
 add_test(ArithmeticBigInt6 6a)
+
+add_executable(1c compareBigInt1.c ${src})
+add_test(CompareBigInt1 1c)
+
+add_executable(2c compareBigInt2.c ${src})
+add_test(CompareBigInt2 2c)
+
+add_executable(3c compareBigInt3.c ${src})
+add_test(CompareBigInt3 3c)
+
+add_executable(4c compareBigInt4.c ${src})
+add_test(CompareBigInt4 4c)
+
+add_executable(5c compareBigInt5.c ${src})
+add_test(CompareBigInt5 5c)

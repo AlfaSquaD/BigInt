@@ -12,7 +12,6 @@ BigInt *strtobigInt(char* str){
     result->size = 0;
     char* currStr = calloc(sizeof (char), DECIMAL_SEP + 1);
     char* str2long = currStr;
-    unsigned long long currNum;
     if(str[0] == '-'){
         result->isNegative = true;
         str += 1;
@@ -150,6 +149,60 @@ void tidyBigInt(BigInt* number){
             currNode = currNode->next;
             free(temp);
         }
+    }
+}
+
+BigInt *copyBigInt(BigInt *number){
+    BigInt *result = malloc(sizeof (BigInt));
+    result->isNegative = number->isNegative;
+    result->size = 0;
+    result->root = malloc(sizeof (BigIntNode));
+    BigIntNode *numCurr = number->root;
+    BigIntNode *copyCurr = result->root;
+    while (numCurr){
+        copyCurr->number = numCurr->number;
+        if(numCurr->next){
+            copyCurr->next = malloc(sizeof (BigIntNode));
+            if(result->size == 0) copyCurr->prev = NULL;
+            else copyCurr->next->prev = copyCurr;
+            result->size += 1;
+        }
+        else copyCurr->next = NULL;
+        numCurr = numCurr->next;
+    }
+    return result;
+}
+
+int compare(BigInt* num1, BigInt* num2){
+    if(!num1->isNegative && num2->isNegative) return 1;
+    if(num1->isNegative && !num2->isNegative) return -1;
+    if(num1->isNegative){
+        if(num1->size > num2->size) return -1;
+        else if(num1->size < num2->size) return 1;
+        else return _compareNode(num1->root, num2->root) * -1;
+
+    }
+    else{
+        if(num1->size > num2->size) return 1;
+        else if(num1->size < num2->size) return -1;
+        else return _compareNode(num1->root, num2->root);
+    }
+}
+
+int _compareNode(BigIntNode *node1, BigIntNode *node2){
+    int result;
+    if(node1->next && node2->next){
+        result = _compareNode(node1->next, node2->next);
+    }
+    else{
+        if(node1->number == node2->number) result = 0;
+        else result = node1->number > node2->number?1:-1;
+    }
+    if(result != 0) return result;
+    else{
+        if(node1->number == node2->number) result = 0;
+        else result = node1->number > node2->number?1:-1;
+        return result;
     }
 }
 

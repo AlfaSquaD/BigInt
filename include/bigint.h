@@ -34,9 +34,11 @@ void subBigInt(BigInt* dest, BigInt* number);
 
 void tidyBigInt(BigInt* number);
 
-bool _tidy(BigIntNode *number);
-
 int compare(BigInt* num1, BigInt* num2);
+
+int _compareNode(BigIntNode *node1, BigIntNode *node2);
+
+BigInt *copyBigInt(BigInt *number);
 
 BigInt *strtobigInt(char* str);
 
