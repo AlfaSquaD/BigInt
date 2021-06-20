@@ -24,10 +24,6 @@ typedef struct bigIntStruct{
 }BigInt;
 
 
-// TODO: Write compare func for sub (also needed for interpreter actions)
-// TODO: Write copy struct func for sub function. Swap needed for some actions.
-
-
 void addBigInt(BigInt* dest, BigInt* number);
 
 void subBigInt(BigInt* dest, BigInt* number);
