@@ -4,123 +4,162 @@
 
 #include "../include/bigint.h"
 
-BigInt *createBigInt(char* str){
-    char* number = str;
-    BigInt *data = malloc(sizeof (BigInt));
-    if(number[0] == '-'){
-        data->isNegative = true;
-        // Skipping minus sign
-        number += 1;
-    }else data->isNegative = false;
-    data->number = calloc(sizeof (char), DIGITS);
-    unsigned long len = strlen(number);
-    if(len == 1 && number[0] == '0') data->number[0] = '0';
-    else{
-        for (int i = 0; i < len; i++){
-            if(number[0] == '0') number+=1;
-        }
-        strcpy(data->number, number);
-        for (int i = 0; i < strlen(number); i++){
-            if(!(number[i] >= '0' && number[i] <= '9')){
-                free(data->number);
-                free(data);
-                fprintf(stdout, "Not an integer value!\n");
-                return NULL;
-            }
-        }
-    }
-    return data;
-}
-
-int compare(BigInt* num1, BigInt* num2){
-    if(!num1->isNegative && num2->isNegative) return 1;
-    else if(num1->isNegative && !num2->isNegative) return -1;
-    unsigned long len1 = strlen(num1->number);
-    unsigned long len2 = strlen(num2->number);
-    if(len1 > len2) return 1;
-    else if(len2 > len1) return -1;
-    else{
-        if(num1->isNegative && num2->isNegative){
-            for (int i = 0; i < len1; ++i) {
-                if(num1->number[i] > num2->number[i]) return -1;
-                else if(num2->number[i] > num1->number[i]) return 1;
-            }
-            return 0;
+BigInt *strtobigInt(char* str){
+    BigInt *result = malloc(sizeof (BigInt));
+    BigIntNode *currNode = malloc(sizeof (BigIntNode));
+    result->root = currNode;
+    currNode->prev = NULL;
+    result->size = 0;
+    char* currStr = calloc(sizeof (char), DECIMAL_SEP + 1);
+    char* str2long = currStr;
+    unsigned long long currNum;
+    if(str[0] == '-'){
+        result->isNegative = true;
+        str += 1;
+    } else result->isNegative = false;
+    while (str[0] == '0') str += 1;
+    long long i = strlen(str) - 1;
+    while (i >= 0) {
+        result->size += 1;
+        i -= DECIMAL_SEP;
+        if(i < 0){
+            strncpy(currStr, str, i + DECIMAL_SEP + 1);
         }
         else{
-            for (int i = 0; i < len1; ++i) {
-                if(num1->number[i] > num2->number[i]) return 1;
-                else if(num2->number[i] > num1->number[i]) return -1;
-            }
-            return 0;
+            strncpy(currStr, (str + i + 1), DECIMAL_SEP);
         }
+        while (str2long[0] == '0') str2long += 1;
+        currNode->number = strtoll(str2long, NULL, 0);
+        if(i >= 0){
+            currNode->next = malloc(sizeof (BigIntNode));
+            currNode->next->prev = currNode;
+        }
+        else currNode->next = NULL;
+        currNode = currNode->next;
+        for (int j = 0; j < DECIMAL_SEP; ++j) {
+            currStr[j] = 0;
+        }
+        str2long = currStr;
     }
+    free(currStr);
+    return result;
 }
 
-bool bigint_add(char* out, char* num1, char* num2){
-    char* tmp = calloc(1 ,DIGITS);
-    char *shortNum, *longNum;
-    unsigned long len1 = strlen(num1);
-    unsigned long len2 = strlen(num2);
-    unsigned long shortest;
-    int diff;
+void addBigInt(BigInt* dest, BigInt* number){
     int carry = 0;
-    int sum;
-    if(len1 > DIGITS || len2 > DIGITS){
-        fprintf(stdout, "Number larger than %d Digits!\nOperation stopped!\n", DIGITS);
-        return false;
+    BigIntNode *destNode = dest->root, *otherNode = number->root;
+    if((dest->isNegative + number->isNegative) % 2 != 0){
+        return subBigInt(dest, number);
     }
-    if(len1 <= len2){
-        shortest = len1;
-        diff = (int)(len2 - len1);
-        shortNum = num1;
-        longNum = num2;
-    }
-    else{
-        shortest = len2;
-        diff = (int)(len1 - len2);
-        shortNum = num2;
-        longNum = num1;
-    }
-    for (int i = (int)shortest - 1; i >= 0; i--){
-        sum = ((shortNum[i] - '0') + (longNum[i + diff] - '0')) + carry;
-        if(sum > 9){
-            tmp[i + diff] = (char)('0' + (sum % 10));
+    while (otherNode){
+        destNode->number += otherNode->number + carry;
+        carry = 0;
+        if(destNode->number >= NODE_MAX_VAL){
+            destNode->number -= NODE_MAX_VAL;
             carry = 1;
-        } else{
-            tmp[i+diff] = (char)(sum + '0');
-            carry = 0;
         }
-    }
-    for(int i = diff - 1; i >= 0; i--){
-        sum = (longNum[i] - '0') + carry;
-        if(sum > 9){
-            tmp[i] = (char)('0' + (sum % 10));
-            carry = 1;
-        } else{
-            tmp[i] = (char)(sum + '0');
-            carry = 0;
+        if(destNode->next == NULL && otherNode->next){
+            destNode->next = malloc(sizeof (BigIntNode));
+            dest->size += 1;
         }
+        destNode = destNode->next;
+        otherNode = otherNode->next;
     }
     if(carry == 1){
-        if (strlen(tmp) == DIGITS) {
-            fprintf(stdout, "Number larger than %d Digits!\nOperation stopped!\n", DIGITS);
-            return false;
-        }
-        for (int i = (int) strlen(tmp) - 1; i >= 0; i--) tmp[i + 1] = tmp[i];
-        tmp[0] = '1';
+        destNode->next = malloc(sizeof (BigIntNode));
+        dest->size += 1;
+        destNode->number = carry;
     }
-    strcpy(out, tmp);
-    free(tmp);
-    return true;
+    tidyBigInt(dest);
+}
+
+void subBigInt(BigInt* dest, BigInt* number){
+    if((dest->isNegative + number->isNegative) % 2 == 0){
+        return addBigInt(dest, number);
+    }
+    BigIntNode *destNode = dest->root, *otherNode = number->root;
+    while (otherNode){
+        destNode->number -= otherNode->number;
+        if(destNode->number < 0){
+            destNode->number += NODE_MAX_VAL;
+            if(destNode->next)
+                destNode->next->number -= 1;
+            else{
+                dest->isNegative = !dest->isNegative;
+                destNode->number *= -1;
+            }
+        }
+        if(destNode->next == NULL && otherNode->next){
+            destNode->next = malloc(sizeof (BigIntNode));
+            dest->size += 1;
+        }
+        if(otherNode->next) destNode = destNode->next;
+        otherNode = otherNode->next;
+    }
+    if(destNode->number < 0){
+        dest->isNegative = !dest->isNegative;
+        destNode->number = destNode->number * -1;
+    }
+    tidyBigInt(dest);
 }
 
 void printBigInt(BigInt* number){
-    if(number->isNegative) printf("-%s", number->number);
-    else printf("%s", number->number);
+    if(number->isNegative) printf("-");
+    _printbigIntNode(number->root);
 }
 
-void freeBigInt(BigInt* data){
-    free(data->number);
-    free(data);
+void _printbigIntNode(BigIntNode* node){
+    if(node->next){
+        _printbigIntNode(node->next);
+        for (char i = digitCount(node->number); i < DECIMAL_SEP; ++i) printf("0");
+    }
+    printf("%lld", node->number);
+}
+
+char digitCount(long long num){
+    if (num == 0) return 1;
+    char result = 0;
+    while (num != 0){
+        num /= 10;
+        result++;
+    }
+    return result;
+}
+
+void tidyBigInt(BigInt* number){
+    BigIntNode *currNode = number->root;
+    BigIntNode *temp = NULL;
+    bool clean = false;
+    while (currNode){
+        if(currNode->number == 0){
+            if(temp==NULL) temp = currNode;
+            clean = true;
+        } else{
+            temp = NULL;
+            clean = false;
+        }
+        currNode = currNode->next;
+    }
+    if(clean && temp){
+        currNode = temp;
+        if(currNode == number->root)
+            currNode = currNode->next;
+        currNode->prev->next = NULL;
+        while (currNode){
+            temp = currNode;
+            currNode = currNode->next;
+            free(temp);
+        }
+    }
+}
+
+void freeBigInt(BigInt* number){
+    BigIntNode *curr, *temp;
+    curr = number->root;
+    while (curr){
+        temp = curr;
+        curr = curr->next;
+        free(temp);
+    }
+    free(number);
 }
