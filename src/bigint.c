@@ -81,7 +81,6 @@ void subBigInt(BigInt* dest, BigInt* number){
     bool swap;
     if(compareAbsVal(dest, number) == -1){
         tdest = copyBigInt(number);
-        tdest->isNegative = !dest;
         tnumber = dest;
         swap = true;
     } else{
@@ -94,31 +93,17 @@ void subBigInt(BigInt* dest, BigInt* number){
         destNode->number -= otherNode->number;
         if(destNode->number < 0){
             destNode->number += NODE_MAX_VAL;
-            if(destNode->next)
-                destNode->next->number -= 1;
-            else{
-                dest->isNegative = !dest->isNegative;
-                destNode->number *= -1;
-            }
-        }
-        if(destNode->next == NULL && otherNode->next){
-            destNode->next = malloc(sizeof (BigIntNode));
-            dest->size += 1;
+            destNode->next->number -= 1;
         }
         if(otherNode->next) destNode = destNode->next;
         otherNode = otherNode->next;
     }
-    if(destNode->number < 0){
-        dest->isNegative = !dest->isNegative;
-        destNode->number = destNode->number * -1;
-    }
     tidyBigInt(tdest);
     if(swap){
-        freeBigInt(dest);
-        dest = malloc(sizeof (BigInt));
-        dest->isNegative = tdest->isNegative;
+        freeBigIntNode(dest->root);
         dest->size = tdest->size;
         dest->root = tdest->root;
+        dest->isNegative = tdest->isNegative;
         free(tdest);
     }
 }
@@ -165,12 +150,12 @@ void tidyBigInt(BigInt* number){
         if(currNode == number->root)
             currNode = currNode->next;
         currNode->prev->next = NULL;
-        while (currNode){
-            temp = currNode;
-            currNode = currNode->next;
-            free(temp);
-        }
+        freeBigIntNode(currNode);
     }
+    currNode = number->root;
+    int newSize = 0;
+    for (newSize; currNode; ++newSize) currNode = currNode->next;
+    number->size = newSize;
 }
 
 BigInt *copyBigInt(BigInt *number){
@@ -180,16 +165,17 @@ BigInt *copyBigInt(BigInt *number){
     result->root = malloc(sizeof (BigIntNode));
     BigIntNode *numCurr = number->root;
     BigIntNode *copyCurr = result->root;
+    copyCurr->prev == NULL;
     while (numCurr){
         copyCurr->number = numCurr->number;
         if(numCurr->next){
             copyCurr->next = malloc(sizeof (BigIntNode));
-            if(result->size == 0) copyCurr->prev = NULL;
-            else copyCurr->next->prev = copyCurr;
+            copyCurr->next->prev = copyCurr;
             result->size += 1;
         }
         else copyCurr->next = NULL;
         numCurr = numCurr->next;
+        copyCurr = copyCurr->next;
     }
     return result;
 }
@@ -230,6 +216,15 @@ int _compareNode(BigIntNode *node1, BigIntNode *node2){
         if(node1->number == node2->number) result = 0;
         else result = node1->number > node2->number?1:-1;
         return result;
+    }
+}
+
+void freeBigIntNode(BigIntNode* node){
+    BigIntNode *temp;
+    while (node){
+        temp = node;
+        node = node->next;
+        free(temp);
     }
 }
 

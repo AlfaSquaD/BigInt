@@ -46,6 +46,8 @@ void _printbigIntNode(BigIntNode* node);
 
 void freeBigInt(BigInt* number);
 
+void freeBigIntNode(BigIntNode* node);
+
 char digitCount(long long num);
 
 #endif //BIGINT_BIGINT_H
