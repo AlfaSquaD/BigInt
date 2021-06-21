@@ -2,7 +2,7 @@
 // Created by ensar on 6/12/2021.
 //
 
-#include "../include/bigint.h"
+#include "bigint.h"
 
 BigInt *strtobigInt(char* str){
     BigInt *result = malloc(sizeof (BigInt));
@@ -16,7 +16,7 @@ BigInt *strtobigInt(char* str){
         result->isNegative = true;
         str += 1;
     } else result->isNegative = false;
-    while (str[0] == '0') str += 1;
+    while (str[0] == '0' && strlen(str) > 1) str += 1;
     long long i = strlen(str) - 1;
     while (i >= 0) {
         result->size += 1;
@@ -145,7 +145,7 @@ void tidyBigInt(BigInt* number){
         }
         currNode = currNode->next;
     }
-    if(clean && temp){
+    if(clean && temp && number->size > 1){
         currNode = temp;
         if(currNode == number->root)
             currNode = currNode->next;
