@@ -4,7 +4,7 @@ int main(){
     char *assert = "14487448988547787781564780197449560878289953506360";
     char *str1 = "5125134865135446546152165846123875463123412341234";
     BigInt *bigInt1 = strtobigInt(str1);
-    char *str2 = "-9362314123412341235412614351325685415166541165126";
+    char *str2 = "9362314123412341235412614351325685415166541165126";
     BigInt *bigInt2 = strtobigInt(str2);
     addBigInt(bigInt1, bigInt2);
     char *out = calloc(sizeof (char), strlen(assert) + 1);
