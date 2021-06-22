@@ -69,11 +69,36 @@ extra digits stored there.
   * Compares two BigIntNodes.(Including next nodes).
 
 * ```c 
-  void subbi_internal(BigInt* dest, BigInt* number);
+  BigInt *copyBigInt(BigInt *number);
   ```
-  * Subtracts two BigInts without signs.
+  * Copies the given BigInt and returns its pointer.
 
 * ```c 
-  void tidyBigInt(BigInt* number);
+  BigInt *strtobigInt(char* str);
   ```
-  * Cleans unnecessary nodes from BigInt.
+  * Creates a BigInt according to the str and returns its pointer.
+
+* ```c 
+  void printBigInt(BigInt* number);
+  ```
+  * Prints the given BigInt.
+
+* ```c 
+  void printbigIntNode(BigIntNode* node);
+  ```
+  * Prints the given BigIntNode. (Recuses next nodes)
+
+* ```c 
+  void freeBigInt(BigInt* number);
+  ```
+  * Frees the given BigInt.
+
+* ```c 
+  void freeBigIntNode(BigIntNode* node);
+  ```
+  * Frees the given BigIntNode. (Recuses next nodes)
+
+* ```c 
+  char digitCount(long long num);
+  ```
+  * Returns digit count of the given number.
