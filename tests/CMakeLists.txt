@@ -79,7 +79,7 @@ add_executable(22a arithmeticBigInt22.c ${src})
 add_test(ArithmeticBigInt22 22a)
 
 add_executable(23 arithmeticBigInt23.c ${src})
-add_test(CreateBigInt23 23)
+add_test(arithmeticBigInt23 23)
 
 add_executable(1c compareBigInt1.c ${src})
 add_test(CompareBigInt1 1c)
