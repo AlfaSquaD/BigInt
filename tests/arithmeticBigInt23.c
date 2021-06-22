@@ -2,7 +2,7 @@
 
 int main(){
     char *assert = "10000000002";
-    char *str1 = "1";
+    char *str1 = "3";
     BigInt *bigInt1 = strtobigInt(str1);
     char *str2 = "-9999999999";
     BigInt *bigInt2 = strtobigInt(str2);
