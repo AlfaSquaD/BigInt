@@ -29,27 +29,51 @@ extra digits stored there.
 ## BigInt Functions
 
 * ```c 
-  void openBlock(BlockKeeper *blockKeeper, long long int *loopCounter, unsigned int line, unsigned long long int fPointer,
-   bool isIntConstant, bool isShortHandLoop);
+  void addBigInt(BigInt* dest, BigInt* number);
   ```
-    * Opens a new block. Nests new block if already a block opened.
+    * Sums two BigInts.
 
 * ```c 
-  bool closeBlock(BlockKeeper *blockKeeper);
+  void subBigInt(BigInt* dest, BigInt* number);
   ```
-    * Closes the deepest block. If there is no block to close, returns false.
+    * Subtracts two BigInts.
 
 * ```c 
-  unsigned int closeBlockAndGetLine(BlockKeeper *blockKeeper);
+  void addbi_internal(BigInt* dest, BigInt* number);
   ```
-    * Closes the deepest block and returns its startLine. If there is no block to close, returns -1.
+    * Sums two BigInts without signs.
 
 * ```c 
-  BlockKeeper *createBlockKeeper()
+  void subbi_internal(BigInt* dest, BigInt* number);
   ```
-    * Creates a BlockKeeper and returns its pointer.
+    * Subtracts two BigInts without signs.
 
 * ```c 
-  void freeBlockKeeper(BlockKeeper *blockKeeper)
+  void tidyBigInt(BigInt* number);
   ```
-    * Frees given BlockKeeper.
+    * Cleans unnecessary nodes from BigInt.
+
+* ```c 
+  int compare(BigInt* num1, BigInt* num2);
+  ```
+  * Compares two BigInts.
+
+* ```c 
+  int compareAbsVal(BigInt* num1, BigInt* num2);
+  ```
+  * Compares two BigInts absolute values.
+
+* ```c 
+  int compareNode(BigIntNode *node1, BigIntNode *node2);
+  ```
+  * Compares two BigIntNodes.(Including next nodes).
+
+* ```c 
+  void subbi_internal(BigInt* dest, BigInt* number);
+  ```
+  * Subtracts two BigInts without signs.
+
+* ```c 
+  void tidyBigInt(BigInt* number);
+  ```
+  * Cleans unnecessary nodes from BigInt.
