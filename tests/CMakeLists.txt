@@ -42,6 +42,9 @@ add_test(ArithmeticBigInt9 9a)
 add_executable(10a arithmeticBigInt10.c ${src})
 add_test(ArithmeticBigInt10 10a)
 
+add_executable(11a arithmeticBigInt11.c ${src})
+add_test(ArithmeticBigInt11 11a)
+
 add_executable(1c compareBigInt1.c ${src})
 add_test(CompareBigInt1 1c)
 
