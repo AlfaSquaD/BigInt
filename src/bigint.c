@@ -115,8 +115,10 @@ void add(BigInt* dest, BigInt* number){
         otherNode = otherNode->next;
     }
     if(carry == 1){
-        destNode->next = calloc(sizeof (BigIntNode), 1);
-        destNode->next->prev = destNode;
+        if(destNode->next == NULL){
+            destNode->next = calloc(sizeof (BigIntNode), 1);
+            destNode->next->prev = destNode;
+        }
         destNode = destNode->next;
         dest->size += 1;
         destNode->number = carry;
