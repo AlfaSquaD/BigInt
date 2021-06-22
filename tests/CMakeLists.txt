@@ -98,3 +98,6 @@ add_test(CompareBigInt4 4c)
 
 add_executable(5c compareBigInt5.c ${src})
 add_test(CompareBigInt5 5c)
+
+add_executable(6c compareBigInt6.c ${src})
+add_test(CompareBigInt6 6c)
