@@ -1,4 +1,4 @@
-# blocks.h
+# BigInt
 
 ## BigIntNode struct
 
