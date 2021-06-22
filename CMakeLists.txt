@@ -11,5 +11,5 @@ file(GLOB_RECURSE src ${PROJECT_SOURCE_DIR}/src/*.c)
 
 add_subdirectory(tests)
 
-add_executable(BigInt ${src} main.c)
+add_library(BigInt ${src})
 
