@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/alfasquad/bigint/badge/main)](https://www.codefactor.io/repository/github/alfasquad/bigint/overview/main)
+
 # BigInt
 
 ## BigIntNode struct
